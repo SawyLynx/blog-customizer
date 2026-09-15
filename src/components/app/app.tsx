@@ -34,3 +34,4 @@ export const App = () => {
 		</main>
 	);
 };
+console.log('');
