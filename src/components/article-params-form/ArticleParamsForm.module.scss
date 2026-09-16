@@ -30,3 +30,18 @@
 	justify-content: space-between;
 	margin-top: auto;
 }
+
+.fontParams {
+	display: flex;
+	flex-direction: column;
+	gap: 46px;
+	margin-top: 50px;
+	margin-bottom: 50px;
+}
+
+.backgroundParams {
+	display: flex;
+	flex-direction: column;
+	gap: 46px;
+	margin-top: 50px;
+}
