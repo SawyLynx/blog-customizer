@@ -12,39 +12,37 @@ import {
 	fontColors,
 	fontFamilyOptions,
 	fontSizeOptions,
+	OptionType,
 } from 'src/constants/articleProps';
 import { Select } from 'src/ui/select';
 import { Text } from 'src/ui/text';
 import { RadioGroup } from 'src/ui/radio-group';
+import { Separator } from 'src/ui/separator';
 
 interface ArticleParamsFormProps {
+	currentAppState: ArticleStateType;
 	onApply: (state: ArticleStateType) => void;
 	onReset: () => void;
 }
 
 export const ArticleParamsForm = ({
+	currentAppState,
 	onApply,
 	onReset,
 }: ArticleParamsFormProps) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const formRef = useRef<HTMLDivElement>(null);
 
-	const [selectFontFamily, setFontFamily] = useState(
-		defaultArticleState.fontFamilyOption
-	);
-	const [selectFontSize, setFontSize] = useState(
-		defaultArticleState.fontSizeOption
-	);
-	const [selectFontColor, setFontColor] = useState(
-		defaultArticleState.fontColor
-	);
+	const [formState, setFormState] = useState<ArticleStateType>(currentAppState);
 
-	const [selectBackgroundColor, setBackgroundColor] = useState(
-		defaultArticleState.backgroundColor
-	);
-	const [selectContentWidth, setContentWidth] = useState(
-		defaultArticleState.contentWidth
-	);
+	const updateFormField = (field: keyof ArticleStateType) => {
+		return (value: OptionType) => {
+			setFormState((prev) => ({
+				...prev,
+				[field]: value,
+			}));
+		};
+	};
 
 	const togglePanel = () => {
 		setIsOpen((prev) => !prev);
@@ -68,24 +66,15 @@ export const ArticleParamsForm = ({
 
 	const handleReset = (event: React.FormEvent) => {
 		event.preventDefault();
-		setFontFamily(defaultArticleState.fontFamilyOption);
-		setFontSize(defaultArticleState.fontSizeOption);
-		setFontColor(defaultArticleState.fontColor);
-		setBackgroundColor(defaultArticleState.backgroundColor);
-		setContentWidth(defaultArticleState.contentWidth);
+		setFormState(defaultArticleState);
 
 		onReset();
+		setIsOpen(false);
 	};
 
 	const handleSubmit = (event: React.FormEvent) => {
 		event.preventDefault();
-		onApply({
-			fontFamilyOption: selectFontFamily,
-			fontSizeOption: selectFontSize,
-			fontColor: selectFontColor,
-			backgroundColor: selectBackgroundColor,
-			contentWidth: selectContentWidth,
-		});
+		onApply(formState);
 		setIsOpen(false);
 	};
 
@@ -103,36 +92,37 @@ export const ArticleParamsForm = ({
 					</Text>
 					<div className={styles.fontParams}>
 						<Select
-							selected={selectFontFamily}
+							selected={formState.fontFamilyOption}
 							options={fontFamilyOptions}
-							onChange={setFontFamily}
+							onChange={updateFormField('fontFamilyOption')}
 							title='шрифт'
 						/>
 						<RadioGroup
-							selected={selectFontSize}
+							selected={formState.fontSizeOption}
 							options={fontSizeOptions}
-							onChange={setFontSize}
+							onChange={updateFormField('fontSizeOption')}
 							title='размер шрифта'
 							name={'Font Size'}
 						/>
 						<Select
-							selected={selectFontColor}
+							selected={formState.fontColor}
 							options={fontColors}
-							onChange={setFontColor}
+							onChange={updateFormField('fontColor')}
 							title='цвет шрифта'
 						/>
 					</div>
+					<Separator></Separator>
 					<div className={styles.backgroundParams}>
 						<Select
-							selected={selectBackgroundColor}
+							selected={formState.backgroundColor}
 							options={backgroundColors}
-							onChange={setBackgroundColor}
+							onChange={updateFormField('backgroundColor')}
 							title='цвет фона'
 						/>
 						<Select
-							selected={selectContentWidth}
+							selected={formState.contentWidth}
 							options={contentWidthArr}
-							onChange={setContentWidth}
+							onChange={updateFormField('contentWidth')}
 							title='ширина контента'
 						/>
 					</div>

@@ -29,6 +29,7 @@ export const App = () => {
 			<ArticleParamsForm
 				onApply={setArticleState}
 				onReset={() => setArticleState(defaultArticleState)}
+				currentAppState={articleState}
 			/>
 			<Article />
 		</main>
